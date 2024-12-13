@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/artists")
 public class ArtistController {
@@ -24,10 +27,11 @@ public class ArtistController {
 
     @PostMapping
     public String getArtistsPage(@RequestParam(required = false) String error,
-                                 @RequestParam Long songId,
+                                 @RequestParam(required = false) Long songId,
                                  Model model){
 
-        Song song = songService.listSongs().stream().filter(b -> b.getId() == songId).findAny().orElse(null);
+//        Song song = songService.listSongs().stream().filter(b -> b.getId() == songId).findAny().orElse(null);
+        Song song = songService.findById(songId).get();
         if(song!=null){
             model.addAttribute("artists", artistService.listArtists());
             model.addAttribute("song", song);
@@ -37,12 +41,12 @@ public class ArtistController {
     }
 
     @PostMapping("/add-artist")
-    public String addArtistsToSong(@RequestParam Long artistId,
-                                   @RequestParam Long songId){
+    public String addArtistsToSong(@RequestParam Long songId,
+                                   @RequestParam Long artistId){
 
 
-        Artist artist = artistService.listArtists().stream().filter(b -> b.getId() == artistId).findAny().orElse(null);
-        songService.addArtistToSong(artist, songId);
+//        Artist artist = artistService.listArtists().stream().filter(b -> b.getId() == artistId).findAny().orElse(null);
+        songService.addArtistToSong(songId, artistId);
 
         return "redirect:/songs";
     }

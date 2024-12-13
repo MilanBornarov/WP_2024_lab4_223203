@@ -36,31 +36,33 @@ public class SongController {
             model.addAttribute("hasError", true);
             model.addAttribute("error", error);
         }
-
-
         model.addAttribute("songs", this.songService.listSongs());
         return "listSongs";
     }
+//==============================================================//
+//    @GetMapping("/songs/add-form")
+//    public String getAddSongPage(Model model){
+//        List<Artist> artists = this.artistService.listArtists();
+//        List<Album> albums = this.albumService.findAll();
+//        model.addAttribute("artists", artists);
+//        model.addAttribute("albums", albums);
+//        return "add-song";
+//    }
+@GetMapping("/songs/add-form")
+public String getAddSongPage(Model model) {
+    model.addAttribute("albums", albumService.findAll());
+//    model.addAttribute("song", null); //za nova pesna nema ureduvanje
+    return "add-song";
+}
 
-    @GetMapping("/songs/add-form")
-    public String getAddSongPage(Model model){
-        List<Artist> artists = this.artistService.listArtists();
-        List<Album> albums = this.albumService.findAll();
-        model.addAttribute("artists", artists);
-        model.addAttribute("albums", albums);
-        return "add-song";
-    }
-
-    @PostMapping("/songs/add")
+/*    @PostMapping("/songs/add")
     public String saveSong( @RequestParam(required = false) Long id,
                             @RequestParam(required = false) String trackId,
                             @RequestParam(required = false) String title,
                             @RequestParam(required = false) String genre,
                             @RequestParam(required = false) Integer releaseYear,
                             @RequestParam(required = false) Long albumId){
-
          //Album album = albumService.findById(albumId).orElseThrow(() -> new InvalidAlbumIdException(albumId));
-
           if(id == null){
               songService.save(trackId, title, genre, releaseYear, albumId);
               return "redirect:/songs";
@@ -68,7 +70,23 @@ public class SongController {
           //nema da ima scenario kade sto id!=null
           songService.update(trackId, title, genre, releaseYear, albumId, id);
           return "redirect:/songs";
+    }*/
+@PostMapping("/songs/add")
+public String saveSong(@RequestParam String trackId,
+                       @RequestParam String title,
+                       @RequestParam String genre,
+                       @RequestParam Integer releaseYear,
+                       @RequestParam Long albumId,
+                       @RequestParam (required = false) List<Long> artistIds) {
+    if (artistIds == null || artistIds.isEmpty()) {
+        songService.save(trackId, title, genre, releaseYear, albumId);
+    } else {
+        List<Artist> artists = artistService.listByIds(artistIds);
+        songService.update(trackId, title, genre, releaseYear, albumId, artists);
     }
+    return "redirect:/songs";
+}
+
 
     @GetMapping("/songs/delete/{id}")
     public String deleteSong(@PathVariable Long id){
@@ -76,30 +94,43 @@ public class SongController {
         return "redirect:/songs";
     }
 
-    @GetMapping("/songs/edit-form/{id}")
-    public String getEditSongForm(@PathVariable Long id, Model model){
-        Song song = this.songService.findByTrackId(id);
-        List<Artist> artists = this.artistService.listArtists();
-        List<Album> albums = this.albumService.findAll();
-        model.addAttribute("song", song);
-        model.addAttribute("artists", artists);
-        model.addAttribute("albums", albums);
-        return "add-song";
-    }
+    //============================================================//
+//    @GetMapping("/songs/edit-form/{id}")
+//    public String getEditSongForm(@PathVariable Long id, Model model){
+//        Song song = this.songService.findByTrackId(id);
+//        List<Artist> artists = this.artistService.listArtists();
+//        List<Album> albums = this.albumService.findAll();
+//        model.addAttribute("song", song);
+//        model.addAttribute("artists", artists);
+//        model.addAttribute("albums", albums);
+//        return "add-song";
+//    }
+@GetMapping("/songs/edit-form/{id}")
+public String getEditSongForm(@PathVariable Long id, Model model) {
+    Song song = songService.findById(id).get();
+    model.addAttribute("song", song);
+    model.addAttribute("albums", albumService.findAll());
+    model.addAttribute("artists", artistService.listArtists());
+    return "add-song";
+}
 
-    @GetMapping("/songs/edit/{songId}")
-    public String editSong(@PathVariable Long songId,
-                           @RequestParam(required = false) String trackId,
-                           @RequestParam(required = false) String title,
-                           @RequestParam(required = false) String genre,
-                           @RequestParam(required = false) Integer releaseYear,
-                           @RequestParam(required = false) Long albumId){
-//        Song song = this.songService.findByTrackId(songId);
-//        song.setTitle(title);
-//        song.setGenre(genre);
-//        song.setReleaseYear(releaseYear);
-//        song.setAlbum(albumService.findById(albumId).orElseThrow(() -> new InvalidAlbumIdException(albumId)));
-          songService.update(trackId, title, genre, releaseYear, albumId, songId);
-        return "redirect:/songs";
+
+//    @GetMapping("/songs/edit/{songId}")
+//    public String editSong(@RequestParam(required = false) String trackId,
+//                           @RequestParam(required = false) String title,
+//                           @RequestParam(required = false) String genre,
+//                           @RequestParam(required = false) Integer releaseYear,
+//                           @RequestParam(required = false) Long albumId,
+//                           @RequestParam (required = false) List<Artist> artistIds){
+//          songService.update(trackId, title, genre, releaseYear, albumId, artistIds);
+//        return "redirect:/songs";
+//    }
+
+    @GetMapping("/songs/by-album/{albumId}")
+    public String getSongsByAlbum(@PathVariable Long albumId, Model model) {
+        List<Song> songs = this.songService.findSongsByAlbumId(albumId);
+        model.addAttribute("songs", songs);
+        return "listSongs";
     }
 }
+

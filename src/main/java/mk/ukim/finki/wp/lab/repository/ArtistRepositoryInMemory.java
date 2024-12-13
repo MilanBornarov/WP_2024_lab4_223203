@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class ArtistRepository {
-    public List<Artist> findAll(){
+public class ArtistRepositoryInMemory {
+/*    public List<Artist> findAll(){
         return DataHolder.artistList;
     }
     public Optional<Artist> findById(long id){
         return DataHolder.artistList.stream().filter(a -> a.getId()==id).findFirst();
-    }
+    }*/
 }

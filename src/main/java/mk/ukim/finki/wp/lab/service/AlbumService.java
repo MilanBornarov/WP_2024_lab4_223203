@@ -7,6 +7,4 @@ import java.util.Optional;
 
 public interface AlbumService {
     public List<Album> findAll();
-
-    Optional<Album> findById(long albumId);
 }

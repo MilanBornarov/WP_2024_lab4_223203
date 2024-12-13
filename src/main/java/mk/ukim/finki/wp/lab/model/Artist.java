@@ -16,13 +16,13 @@ import lombok.NoArgsConstructor;
 public class Artist {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     String firstName;
     String lastName;
     String bio;
 
-    public Artist(long id, String firstName, String lastName, String bio) {
-        this.id = id;
+    public Artist(String firstName, String lastName, String bio) {
+//        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.bio = bio;

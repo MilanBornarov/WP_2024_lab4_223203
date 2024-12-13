@@ -6,14 +6,13 @@ import mk.ukim.finki.wp.lab.model.Artist;
 import mk.ukim.finki.wp.lab.model.Song;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.crypto.Data;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Repository
-public class SongRepository {
-    public List<Song> findAll(){
+public class SongRepositoryInMemory {
+/*    public List<Song> findAll(){
         return DataHolder.songList;
     }
     public Song findByTrackId(String trackId){
@@ -51,4 +50,9 @@ public class SongRepository {
         return Optional.of(song);
     }
 
+    public List<Song> findAllByAlbumId(Long albumId) {
+        return DataHolder.songList.stream()
+                .filter(song -> song.getAlbum() != null && Objects.equals(song.getAlbum().getId(), albumId))
+                .toList();
+    }*/
 }
