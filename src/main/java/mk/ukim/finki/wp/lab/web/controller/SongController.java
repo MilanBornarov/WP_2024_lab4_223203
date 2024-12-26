@@ -7,6 +7,7 @@ import mk.ukim.finki.wp.lab.model.exceptions.InvalidAlbumIdException;
 import mk.ukim.finki.wp.lab.service.AlbumService;
 import mk.ukim.finki.wp.lab.service.ArtistService;
 import mk.ukim.finki.wp.lab.service.SongService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,6 +50,7 @@ public class SongController {
 //        return "add-song";
 //    }
 @GetMapping("/songs/add-form")
+@PreAuthorize("hasRole('ADMIN')")
 public String getAddSongPage(Model model) {
     model.addAttribute("albums", albumService.findAll());
 //    model.addAttribute("song", null); //za nova pesna nema ureduvanje
@@ -72,6 +74,7 @@ public String getAddSongPage(Model model) {
           return "redirect:/songs";
     }*/
 @PostMapping("/songs/add")
+@PreAuthorize("hasRole('ADMIN')")
 public String saveSong(@RequestParam String trackId,
                        @RequestParam String title,
                        @RequestParam String genre,
@@ -89,6 +92,7 @@ public String saveSong(@RequestParam String trackId,
 
 
     @GetMapping("/songs/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteSong(@PathVariable Long id){
         this.songService.deleteById(id);
         return "redirect:/songs";
@@ -106,6 +110,7 @@ public String saveSong(@RequestParam String trackId,
 //        return "add-song";
 //    }
 @GetMapping("/songs/edit-form/{id}")
+@PreAuthorize("hasRole('ADMIN')")
 public String getEditSongForm(@PathVariable Long id, Model model) {
     Song song = songService.findById(id).get();
     model.addAttribute("song", song);

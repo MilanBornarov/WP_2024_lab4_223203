@@ -27,9 +27,11 @@
     </style>
 </head>
 <body>
+<div xmlns:th="http://www.thymeleaf.org">
 <header>
     <h1>Select the Artist to add to the List of Performers </h1>
 </header>
+<th:block sec:authorize="hasRole('ROLE_ADMIN')">
 <section>
     <form th:method="POST" th:action="@{/artists/add-artist}">
 
@@ -44,6 +46,7 @@
         <input type='submit' value='Add artist'>
     </form>
 </section>
+</th:block>
 <aside>
     <th:block th:if="${song}">
         <table>
@@ -54,5 +57,6 @@
         </table>
     </th:block>
 </aside>
+</div>
 </body>
 </html>

@@ -11,6 +11,7 @@
     </style>
 </head>
 <body>
+<div xmlns:th="http://www.thymeleaf.org">
 <header>
     <h1>Welcome to My Music Store</h1>
 </header>
@@ -25,7 +26,7 @@
         <input type='submit' value='Submit'>
     </form>
 
-
+    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
     <h2>Edit or delete a song:</h2>
     <div th:each="song : ${songs}">
         <span th:text="'Title: ' + ${song.title} + ', Genre: ' + ${song.genre} + ', Release Year: ' + ${song.releaseYear} + ', Album: ' + ${song.album}"></span><br/>
@@ -37,10 +38,14 @@
             <button type="button">Edit song</button>
         </a>
     </div>
+    </th:block>
+    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
     <h2>Add song:</h2>
     <a th:href="@{/songs/add-form}">
         <button type="button">Add new song</button>
     </a>
+    </th:block>
 </main>
+</div>
 </body>
 </html>
